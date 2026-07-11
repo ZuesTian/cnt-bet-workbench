@@ -19,7 +19,7 @@ CNTBET.syncResistivityFamilyAvailability = function () {
     const item = status[option.value + "_resistivity"] || {};
     const ready = item.status === "ready";
     option.disabled = !ready;
-    option.title = ready ? "" : (item.message || "该电阻率模型不可定量使用");
+    option.title = ready ? "" : "该模型暂不可用于定量预测";
     if (!ready && !option.dataset.baseLabel) option.dataset.baseLabel = option.textContent;
     if (ready && option.dataset.baseLabel) option.textContent = option.dataset.baseLabel;
     if (!ready) option.textContent = (option.dataset.baseLabel || option.textContent).replace(/（不可用）$/, "") + "（不可用）";
@@ -36,8 +36,12 @@ CNTBET.syncResistivityFamilyAvailability = function () {
   } catch (err) {
     CNTBET.setStatus("服务不可用");
     CNTBET.setMessage("error", err.message);
+    CNTBET.qs(".service-state")?.classList.add("offline");
+    CNTBET.qs("#serviceText").textContent = "API 离线";
     return;
   }
+  CNTBET.qs(".service-state")?.classList.add("online");
+  CNTBET.qs("#serviceText").textContent = "API 在线";
   CNTBET.qs("#version").textContent = "v" + CNTBET.state.config.version;
   CNTBET.renderModelStatus();
   CNTBET.syncResistivityFamilyAvailability();
@@ -52,6 +56,8 @@ CNTBET.syncResistivityFamilyAvailability = function () {
   CNTBET.qs("#explainRun").addEventListener("click", CNTBET.runExplain);
   CNTBET.qs("#whatIfRun").addEventListener("click", CNTBET.runWhatIf);
   CNTBET.qs("#resistivityRun").addEventListener("click", CNTBET.runResistivity);
+  CNTBET.qs("#batchPreviewRun").addEventListener("click", CNTBET.runImportPreview);
+  CNTBET.qs("#batchPredictRun").addEventListener("click", CNTBET.runBatchPredict);
   CNTBET.qs("#inverseRun").addEventListener("click", CNTBET.runInverse);
   CNTBET.qs("#predictFamily").addEventListener("change", (event) => CNTBET.renderFields("#predictFields", event.target.value));
   CNTBET.qs("#inverseFamily").addEventListener("change", (event) => {

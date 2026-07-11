@@ -3,110 +3,159 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CNT-BET 公网预测平台</title>
+    <meta name="description" content="CNT BET、粉末电阻率、批量预测与反向设计工作台" />
+    <title>CNT-BET 预测工作台</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="app-shell">
-      <aside class="control-pane">
-        <header class="app-title">
-          <div>
-            <h1>CNT-BET</h1>
-            <span>BET 与电阻率预测平台</span>
-          </div>
-          <span id="version" class="version-pill">Ready</span>
+    <main class="workbench-shell">
+      <aside class="sidebar">
+        <header class="brand-block">
+          <a class="brand" href="#" aria-label="CNT-BET 工作台">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span>CNT-BET</span>
+          </a>
+          <div class="service-state"><i id="serviceDot"></i><span id="serviceText">连接中</span></div>
         </header>
 
-        <section class="model-status" id="modelStatus"></section>
-
-        <nav class="mode-tabs" aria-label="工作页">
-          <button class="active" data-mode="quick"><span>快速估算</span><small>CNT</small></button>
-          <button data-mode="predict"><span>BET预测</span><small>ML</small></button>
-          <button data-mode="resistivity"><span>粉末电阻率</span><small>Rho</small></button>
-          <button data-mode="inverse"><span>反向设计</span><small>Target</small></button>
+        <nav class="mode-tabs" aria-label="预测功能">
+          <button class="active" data-mode="quick"><b>01</b><span>快速估算</span></button>
+          <button data-mode="predict"><b>02</b><span>BET 预测</span></button>
+          <button data-mode="resistivity"><b>03</b><span>粉末电阻率</span></button>
+          <button data-mode="batch"><b>04</b><span>批量预测</span></button>
+          <button data-mode="inverse"><b>05</b><span>反向设计</span></button>
         </nav>
 
-        <section id="panel-quick" class="mode-panel active">
-          <h2>CNT 快速估算 <small>SWCNT / MWCNT</small></h2>
-          <div class="grid two">
-            <label>纯度 (%)<input id="quickPurity" type="number" step="0.1" value="96" /></label>
-            <label>实测 BET（可选）<input id="quickActual" type="number" step="1" value="260" /></label>
-            <label>压实密度（g/cm³，粉末电阻率用）<input id="quickCompactDensity" type="number" step="0.001" value="0.95" /></label>
-          </div>
-          <table class="edit-table" id="temTable">
-            <thead>
-              <tr><th>层数</th><th>占比 %</th><th>外径 nm</th><th>长度 μm</th><th></th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-          <div class="actions">
-            <button id="addTemRow" type="button" class="icon-button">+</button>
-            <button id="quickRun" type="button" class="primary-action">计算</button>
-          </div>
-        </section>
+        <details class="model-details">
+          <summary>模型详情</summary>
+          <section class="model-status" id="modelStatus"></section>
+        </details>
 
-        <section id="panel-predict" class="mode-panel">
-          <h2>BET预测</h2>
-          <label>碳管体系<select id="predictFamily"><option value="mwcnt">MWCNT (结构模型)</option><option value="swcnt">SWCNT (工艺模型)</option></select></label>
-          <div id="predictFields" class="field-stack"></div>
-          <div class="what-if-grid">
-            <label>对比参数1<input id="whatIfKey1" type="text" placeholder="diameter_mean_nm" /></label>
-            <label>新值1<input id="whatIfValue1" type="text" /></label>
-            <label>对比参数2<input id="whatIfKey2" type="text" placeholder="wall_mean" /></label>
-            <label>新值2<input id="whatIfValue2" type="text" /></label>
-            <label>对比参数3<input id="whatIfKey3" type="text" placeholder="purity_pct" /></label>
-            <label>新值3<input id="whatIfValue3" type="text" /></label>
-          </div>
-          <div class="actions">
-            <button id="explainRun" type="button">解释</button>
-            <button id="whatIfRun" type="button">What-if</button>
-            <button id="predictRun" type="button" class="primary-action">预测 BET</button>
-          </div>
-        </section>
-
-        <section id="panel-resistivity" class="mode-panel">
-          <h2>粉末电阻率预测</h2>
-          <label>碳管体系<select id="resistivityFamily"><option value="mwcnt">MWCNT</option><option value="swcnt">SWCNT（不可用）</option></select></label>
-          <div id="resistivityFields" class="field-stack"></div>
-          <div class="actions">
-            <button id="resistivityRun" type="button" class="primary-action">预测电阻率</button>
-          </div>
-        </section>
-
-        <section id="panel-inverse" class="mode-panel">
-          <h2>目标 BET 反向设计</h2>
-          <label>碳管体系<select id="inverseFamily"><option value="mwcnt">MWCNT</option><option value="swcnt">SWCNT</option></select></label>
-          <div class="grid three">
-            <label>目标 BET<input id="targetBet" type="number" value="220" /></label>
-            <label>候选数<input id="candidateCount" type="number" value="3000" /></label>
-            <label>推荐数<input id="recommendCount" type="number" value="10" /></label>
-          </div>
-          <div class="actions">
-            <button id="inverseRun" type="button" class="primary-action">搜索</button>
-          </div>
-        </section>
+        <footer class="sidebar-foot">
+          <span id="version">—</span>
+          <small>研究筛选用途</small>
+        </footer>
       </aside>
 
-      <section class="work-pane">
+      <section class="workspace">
         <header class="workspace-head">
           <div>
-            <h2 id="workspaceTitle">快速估算</h2>
-            <div class="status-line">
-              <strong id="statusText">等待操作</strong>
-              <span id="pathLine"></span>
-            </div>
+            <p class="eyebrow">PREDICTION WORKSPACE</p>
+            <h1 id="workspaceTitle">快速估算</h1>
+          </div>
+          <div class="status-line">
+            <strong id="statusText">等待操作</strong>
+            <span id="pathLine"></span>
           </div>
         </header>
-        <section class="metric-grid" id="metricGrid"></section>
-        <section class="messages" id="messages"></section>
-        <section class="result-area">
-          <pre id="resultSummary"></pre>
-          <div id="resultTable" class="table-wrap"></div>
-        </section>
+
+        <div class="workspace-grid">
+          <section class="input-card" aria-label="输入参数">
+            <header class="card-head">
+              <span>输入参数</span>
+              <small>INPUT</small>
+            </header>
+
+            <section id="panel-quick" class="mode-panel active">
+              <div class="panel-intro"><h2>CNT 快速估算</h2><p>结构与纯度参考场</p></div>
+              <div class="grid two">
+                <label>纯度 (%)<input id="quickPurity" type="number" step="0.1" value="96" /></label>
+                <label>实测 BET（可选）<input id="quickActual" type="number" step="1" value="260" /></label>
+                <label>压实密度 (g/cm³)<input id="quickCompactDensity" type="number" step="0.001" value="0.95" /></label>
+              </div>
+              <div class="table-editor">
+                <table class="edit-table" id="temTable">
+                  <thead><tr><th>层数</th><th>占比 %</th><th>外径 nm</th><th>长度 μm</th><th></th></tr></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="actions">
+                <button id="addTemRow" type="button" class="quiet-action">添加一行</button>
+                <button id="quickRun" type="button" class="primary-action">开始计算 <span>→</span></button>
+              </div>
+            </section>
+
+            <section id="panel-predict" class="mode-panel">
+              <div class="panel-intro"><h2>BET 预测</h2><p>结构或工艺模型</p></div>
+              <label>碳管体系<select id="predictFamily"><option value="mwcnt">MWCNT · 结构模型</option><option value="swcnt">SWCNT · 工艺模型</option></select></label>
+              <div id="predictFields" class="field-stack"></div>
+              <details class="secondary-tools">
+                <summary>What-if 参数对比</summary>
+                <div class="what-if-grid">
+                  <label>参数 1<input id="whatIfKey1" type="text" placeholder="diameter_mean_nm" /></label>
+                  <label>新值<input id="whatIfValue1" type="text" /></label>
+                  <label>参数 2<input id="whatIfKey2" type="text" placeholder="wall_mean" /></label>
+                  <label>新值<input id="whatIfValue2" type="text" /></label>
+                  <label>参数 3<input id="whatIfKey3" type="text" placeholder="purity_pct" /></label>
+                  <label>新值<input id="whatIfValue3" type="text" /></label>
+                </div>
+              </details>
+              <div class="actions">
+                <button id="explainRun" type="button" class="quiet-action">解释</button>
+                <button id="whatIfRun" type="button" class="quiet-action">对比</button>
+                <button id="predictRun" type="button" class="primary-action">预测 BET <span>→</span></button>
+              </div>
+            </section>
+
+            <section id="panel-resistivity" class="mode-panel">
+              <div class="panel-intro"><h2>粉末电阻率</h2><p>定量模型与可信区间</p></div>
+              <label>碳管体系<select id="resistivityFamily"><option value="mwcnt">MWCNT</option><option value="swcnt">SWCNT（不可用）</option></select></label>
+              <div id="resistivityFields" class="field-stack"></div>
+              <div class="actions"><button id="resistivityRun" type="button" class="primary-action">预测电阻率 <span>→</span></button></div>
+            </section>
+
+            <section id="panel-batch" class="mode-panel">
+              <div class="panel-intro"><h2>批量预测</h2><p>最多 1 MB / 200 行</p></div>
+              <div class="grid two">
+                <label>任务<select id="batchTask"><option value="bet">BET 预测</option><option value="resistivity">粉末电阻率</option><option value="joint">联合预测</option></select></label>
+                <label>碳管体系<select id="batchFamily"><option value="mwcnt">MWCNT</option><option value="swcnt">SWCNT</option></select></label>
+              </div>
+              <label class="file-field">CSV / Excel<input id="batchFile" type="file" accept=".csv,.xlsx,.xlsm" /></label>
+              <label>或粘贴 CSV<textarea id="batchText" rows="6" spellcheck="false" placeholder="sample_id,diameter_mean_nm,wall_mean,purity_pct&#10;MW-001,8,6,96"></textarea></label>
+              <div class="actions">
+                <button id="batchPreviewRun" type="button" class="quiet-action">预览</button>
+                <button id="batchPredictRun" type="button" class="primary-action">批量预测 <span>→</span></button>
+              </div>
+            </section>
+
+            <section id="panel-inverse" class="mode-panel">
+              <div class="panel-intro"><h2>反向设计</h2><p>从目标 BET 搜索候选参数</p></div>
+              <label>碳管体系<select id="inverseFamily"><option value="mwcnt">MWCNT</option><option value="swcnt">SWCNT</option></select></label>
+              <div class="grid three">
+                <label>目标 BET<input id="targetBet" type="number" value="220" /></label>
+                <label>候选数<input id="candidateCount" type="number" value="3000" /></label>
+                <label>推荐数<input id="recommendCount" type="number" value="10" /></label>
+              </div>
+              <div class="actions"><button id="inverseRun" type="button" class="primary-action">搜索方案 <span>→</span></button></div>
+            </section>
+          </section>
+
+          <section class="result-card" aria-live="polite">
+            <header class="card-head dark">
+              <span>预测结果</span>
+              <small id="resultState">READY</small>
+            </header>
+            <div id="primaryResult" class="primary-result">
+              <span id="primaryLabel">等待计算</span>
+              <strong id="primaryValue">—</strong>
+              <small id="primaryUnit"></small>
+              <p id="primaryMeta">输入参数后开始预测</p>
+            </div>
+            <section class="messages" id="messages"></section>
+            <pre id="resultSummary" class="result-summary"></pre>
+            <details class="result-details" id="metricDetails">
+              <summary>全部指标</summary>
+              <section class="metric-grid" id="metricGrid"></section>
+            </details>
+            <details class="result-details" id="tableDetails">
+              <summary>结果明细</summary>
+              <div id="resultTable" class="table-wrap"></div>
+            </details>
+          </section>
+        </div>
       </section>
     </main>
-    <!-- JS modules: load in dependency order -->
-    <script>window.CNTBET_API_BASE = "https://47.236.76.214.nip.io";</script>
+
     <script src="js/core.js"></script>
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
@@ -114,6 +163,7 @@
     <script src="js/tabs-quick.js"></script>
     <script src="js/tabs-predict.js"></script>
     <script src="js/tabs-resistivity.js"></script>
+    <script src="js/tabs-batch.js"></script>
     <script src="js/tabs-inverse.js"></script>
     <script src="js/init.js"></script>
   </body>

@@ -70,6 +70,11 @@ CNTBET.DISPLAY_LABELS = {
   log10_mae: "log10 MAE",
   target_bet: "目标 BET",
   count: "推荐数",
+  row_count: "数据行数",
+  column_count: "字段数",
+  prediction_rows: "成功行",
+  error_rows: "失败行",
+  generated_at: "生成时间",
 };
 
 CNTBET.DISPLAY_VALUES = {
@@ -120,6 +125,8 @@ CNTBET.labelForMetric = function (key) {
 CNTBET.setStatus = function (text, detail) {
   CNTBET.qs("#statusText").textContent = text || "";
   CNTBET.qs("#pathLine").textContent = detail || "";
+  const state = CNTBET.qs("#resultState");
+  if (state) state.textContent = /失败|不可用/.test(text || "") ? "CHECK" : (/完成|成功/.test(text || "") ? "READY" : "WORKING");
 };
 
 CNTBET.setMessage = function (level, text) {
@@ -131,10 +138,36 @@ CNTBET.setMessage = function (level, text) {
 CNTBET.setResult = function (data, summary, tableRows) {
   CNTBET.qs("#resultSummary").textContent = summary || "";
   CNTBET.renderTable(CNTBET.qs("#resultTable"), tableRows || []);
+  const details = CNTBET.qs("#tableDetails");
+  if (details) details.open = Boolean(tableRows?.length);
+};
+
+CNTBET.PRIMARY_METRICS = [
+  ["BET_predicted", "预测 BET", "m²/g"],
+  ["bet_physics", "理论 BET", "m²/g"],
+  ["rho_recommended_mohm_cm", "粉末电阻率", "mΩ·cm"],
+  ["target_bet", "目标 BET", "m²/g"],
+  ["prediction_rows", "成功预测", "行"],
+  ["row_count", "数据预览", "行"],
+];
+
+CNTBET.setPrimaryResult = function (metrics) {
+  const match = CNTBET.PRIMARY_METRICS.find(([key]) => Number.isFinite(Number(metrics?.[key])));
+  if (!match) return;
+  const [key, label, unit] = match;
+  const value = Number(metrics[key]);
+  CNTBET.qs("#primaryLabel").textContent = label;
+  CNTBET.qs("#primaryValue").textContent = Math.abs(value) >= 100 ? value.toFixed(1) : value.toPrecision(4);
+  CNTBET.qs("#primaryUnit").textContent = unit;
+  const confidence = metrics.resistivity_prediction_confidence
+    ? "可信度 " + CNTBET.displayValue(metrics.resistivity_prediction_confidence, "resistivity_prediction_confidence")
+    : "结果详情可在下方展开";
+  CNTBET.qs("#primaryMeta").textContent = confidence;
 };
 
 CNTBET.setMetrics = function (metrics) {
   const entries = Object.entries(metrics || {}).filter(([, v]) => v !== undefined && v !== null && v !== "");
+  CNTBET.setPrimaryResult(metrics || {});
   CNTBET.qs("#metricGrid").innerHTML = entries
     .map(([k, v]) => '<div class="metric"><span>' + CNTBET.labelForMetric(k) + '</span><strong>' + CNTBET.displayValue(v, k) + '</strong></div>')
     .join("");
@@ -171,9 +204,10 @@ CNTBET.renderModelStatus = function () {
         item.factor2_coverage !== null && item.factor2_coverage !== undefined ? "factor-2=" + CNTBET.formatPercent(item.factor2_coverage) : "",
         metricSource,
       ].filter(Boolean).join(" · ");
+      const statusLabel = item.status === "ready" ? "可用" : (item.status === "unsupported" ? "暂不可用" : "受限");
       return '<div class="model-chip ' + CNTBET.escapeHtml(item.status) + '"><strong>' +
         CNTBET.escapeHtml(item.label) + '</strong><span>' +
-        CNTBET.escapeHtml(item.message || item.status) + '</span><small>' +
+        CNTBET.escapeHtml(statusLabel) + '</span><small>' +
         CNTBET.escapeHtml(detail) + '</small></div>';
     })
     .join("");
