@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="CNT-BET：碳纳米管 BET 快速估算与真实泛化验证。" />
+    <title>CNT-BET · 更可信的 BET 预测</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top"><i></i>CNT-BET</a>
+      <nav><a href="#estimate">估算</a><a href="#validation">验证</a><a href="#method">方法</a></nav>
+      <span class="status">公开演示版</span>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">CARBON NANOTUBE · BET WORKBENCH</p>
+          <h1>更可信的<br /><em>BET 预测</em></h1>
+          <p class="lede">批次分组验证 · 工艺与物理融合 · 域外自动降级</p>
+          <a class="primary" href="#estimate">开始估算 <b>↘</b></a>
+        </div>
+        <div class="hero-metrics">
+          <article class="featured"><span>独立内部集</span><strong>111.87</strong><small>MAE · m²/g</small><b>↓ 6.9%</b></article>
+          <article><span>外部数据</span><strong>99.54</strong><small>MAE · m²/g</small></article>
+          <article><span>批次交叉</span><strong>0</strong><small>431 groups</small></article>
+        </div>
+      </section>
+
+      <section class="estimate" id="estimate">
+        <div class="section-title"><p>01 / QUICK FIELD</p><h2>快速物理估算</h2><span>参考场 · 非完整 ML 预测</span></div>
+        <div class="calculator">
+          <div class="controls">
+            <div class="switch"><button class="active" data-family="mwcnt">MWCNT</button><button data-family="swcnt">SWCNT</button></div>
+            <label>平均管径 <output id="diameter-out">10 nm</output><input id="diameter" type="range" min="1" max="30" step="0.1" value="10" /></label>
+            <label id="walls-wrap">平均层数 <output id="walls-out">8 层</output><input id="walls" type="range" min="2" max="25" step="1" value="8" /></label>
+            <label class="sw-only">SWCNT 占比 <output id="sw-out">0.80</output><input id="sw" type="range" min="0" max="1" step="0.01" value="0.8" /></label>
+            <label class="sw-only">DWCNT 占比 <output id="dw-out">0.15</output><input id="dw" type="range" min="0" max="1" step="0.01" value="0.15" /></label>
+            <label>纯度 <output id="purity-out">96%</output><input id="purity" type="range" min="70" max="100" step="0.1" value="96" /></label>
+          </div>
+          <div class="result"><span id="result-label">MWCNT 理论 BET</span><strong id="result-value">207.1</strong><small>m²/g</small><div><i id="result-bar"></i></div><p>结构与纯度基线</p></div>
+        </div>
+      </section>
+
+      <section class="validation" id="validation">
+        <div class="section-title dark"><p>02 / VALIDATION</p><h2>准确率看真实泛化</h2><span>训练拟合不作为主指标</span></div>
+        <div class="validation-grid">
+          <article><p>批次分组留出</p><strong>21.58 <small>MAE</small></strong><span>328 条测试记录 · R² 0.743</span></article>
+          <article><p>独立结构记录</p><strong>10.26% <small>中位 APE</small></strong><span>45 条 · 工艺/物理融合</span></article>
+          <article><p>外部 BET</p><strong>9.87% <small>中位 APE</small></strong><span>16 条 · 域外筛选</span></article>
+          <article class="warning"><p>外部电阻率</p><strong>0 <small>定量样本</small></strong><span>暂不用于放行</span></article>
+        </div>
+      </section>
+
+      <section class="method" id="method">
+        <div class="section-title"><p>03 / CONTROL LOOP</p><h2>验证闭环</h2></div>
+        <ol><li><b>01</b><span><strong>分组</strong>同批样品不跨训练与测试</span></li><li><b>02</b><span><strong>融合</strong>缺工艺字段时接入结构物理场</span></li><li><b>03</b><span><strong>降级</strong>域外结果只做筛选</span></li></ol>
+      </section>
+    </main>
+    <footer><span>CNT-BET / 2026</span><span>Research screening · not release specification</span></footer>
+    <script src="app.js"></script>
+  </body>
+</html>
