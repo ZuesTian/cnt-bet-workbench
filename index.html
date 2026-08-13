@@ -3,9 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3f5f0" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="description" content="CNT BET、粉末电阻率、批量预测与反向设计工作台" />
     <title>CNT-BET 预测工作台</title>
+    <script src="theme.js?v=20260813"></script>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="theme.css?v=20260813" />
   </head>
   <body>
     <main class="workbench-shell">
@@ -17,6 +21,13 @@
           </a>
           <div class="service-state"><i id="serviceDot"></i><span id="serviceText">连接中</span></div>
         </header>
+
+        <div class="sidebar-tools">
+          <a href="https://zuestian.github.io/Cnanotools/">← CNT LAB</a>
+          <button type="button" data-theme-toggle>
+            <span data-theme-icon aria-hidden="true">☾</span><span data-theme-label>深色</span>
+          </button>
+        </div>
 
         <nav class="mode-tabs" aria-label="预测功能">
           <button class="active" data-mode="quick"><b>01</b><span>快速估算</span></button>
