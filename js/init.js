@@ -56,6 +56,7 @@ CNTBET.syncResistivityFamilyAvailability = function () {
   CNTBET.qs("#explainRun").addEventListener("click", CNTBET.runExplain);
   CNTBET.qs("#whatIfRun").addEventListener("click", CNTBET.runWhatIf);
   CNTBET.qs("#resistivityRun").addEventListener("click", CNTBET.runResistivity);
+  CNTBET.qs("#batchClipboard").addEventListener("click", CNTBET.readBatchClipboard);
   CNTBET.qs("#batchPreviewRun").addEventListener("click", CNTBET.runImportPreview);
   CNTBET.qs("#batchPredictRun").addEventListener("click", CNTBET.runBatchPredict);
   CNTBET.qs("#inverseRun").addEventListener("click", CNTBET.runInverse);

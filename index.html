@@ -122,8 +122,9 @@
                 <label>碳管体系<select id="batchFamily"><option value="mwcnt">MWCNT</option><option value="swcnt">SWCNT</option></select></label>
               </div>
               <label class="file-field">CSV / Excel<input id="batchFile" type="file" accept=".csv,.xlsx,.xlsm" /></label>
-              <label>或粘贴 CSV<textarea id="batchText" rows="6" spellcheck="false" placeholder="sample_id,diameter_mean_nm,wall_mean,purity_pct&#10;MW-001,8,6,96"></textarea></label>
+              <label>或粘贴 Excel / CSV<textarea id="batchText" rows="6" spellcheck="false" placeholder="从 Excel 复制含表头的单元格区域后按 Ctrl+V；也支持 CSV、分号或竖线分隔文本"></textarea></label>
               <div class="actions">
+                <button id="batchClipboard" type="button" class="quiet-action">读取剪贴板</button>
                 <button id="batchPreviewRun" type="button" class="quiet-action">预览</button>
                 <button id="batchPredictRun" type="button" class="primary-action">批量预测 <span>→</span></button>
               </div>
@@ -171,6 +172,7 @@
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/fields.js"></script>
+    <script src="js/tabular-paste.js?v=20260814-paste"></script>
     <script src="js/tabs-quick.js"></script>
     <script src="js/tabs-predict.js"></script>
     <script src="js/tabs-resistivity.js"></script>

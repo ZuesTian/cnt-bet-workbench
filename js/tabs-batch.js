@@ -10,10 +10,24 @@ async function batchPayloadBase() {
     return { filename: file.name, content_base64: await CNTBET.fileToBase64(file) };
   }
   const text = CNTBET.qs("#batchText").value.trim();
-  if (!text) throw new Error("请上传文件或粘贴 CSV。");
-  if (new Blob([text]).size > 1024 * 1024) throw new Error("CSV 内容不能超过 1 MB。");
-  return { filename: "pasted.csv", text };
+  if (!text) throw new Error("请上传文件或粘贴 Excel / CSV 表格。");
+  if (new Blob([text]).size > 1024 * 1024) throw new Error("粘贴内容不能超过 1 MB。");
+  const normalized = CNTBET.normalizePastedTable(text);
+  return { filename: "pasted.csv", text: normalized.csv };
 }
+
+CNTBET.readBatchClipboard = async function () {
+  try {
+    if (!navigator.clipboard?.readText) throw new Error("当前浏览器不允许直接读取剪贴板，请在文本框中按 Ctrl+V。");
+    const text = await navigator.clipboard.readText();
+    if (!text.trim()) throw new Error("剪贴板中没有文本数据。");
+    CNTBET.qs("#batchText").value = text;
+    const preview = CNTBET.normalizePastedTable(text);
+    CNTBET.setMessage("success", `已读取 ${preview.delimiterLabel}：${preview.columnCount} 列、${preview.rowCount} 行。请点击预览确认。`);
+  } catch (error) {
+    CNTBET.setMessage("error", error.name === "NotAllowedError" ? "浏览器未授权读取剪贴板，请在文本框中按 Ctrl+V。" : error.message);
+  }
+};
 
 CNTBET.runImportPreview = async function () {
   CNTBET.setStatus("正在预览");
