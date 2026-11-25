@@ -126,10 +126,11 @@ CNTBET.setStatus = function (text, detail) {
   CNTBET.qs("#statusText").textContent = text || "";
   CNTBET.qs("#pathLine").textContent = detail || "";
   const state = CNTBET.qs("#resultState");
-  if (state) state.textContent = /失败|不可用/.test(text || "") ? "CHECK" : (/完成|成功/.test(text || "") ? "READY" : "WORKING");
+  if (state) state.textContent = /失败|不可用|错误|无效|不正确|检查/.test(text || "") ? "CHECK" : (/完成|成功/.test(text || "") ? "READY" : (/等待|尚无|暂无|请先|导入/.test(text || "") ? "PENDING" : "WORKING"));
 };
 
 CNTBET.setMessage = function (level, text) {
+  if (level === "error" && text) CNTBET.qs("#resultState").textContent = "CHECK";
   CNTBET.qs("#messages").innerHTML = text
     ? '<div class="message ' + level + '">' + CNTBET.escapeHtml(text) + '</div>'
     : "";
@@ -152,11 +153,12 @@ CNTBET.PRIMARY_METRICS = [
 ];
 
 CNTBET.setPrimaryResult = function (metrics) {
-  const match = CNTBET.PRIMARY_METRICS.find(([key]) => Number.isFinite(Number(metrics?.[key])));
+  const match = CNTBET.PRIMARY_METRICS.find(([key]) => metrics?.[key] != null && metrics[key] !== "" && Number.isFinite(Number(metrics[key])));
   if (!match) return;
   const [key, label, unit] = match;
   const value = Number(metrics[key]);
   CNTBET.qs("#primaryLabel").textContent = label;
+  CNTBET.qs("#primaryValue").classList.remove("empty-result");
   CNTBET.qs("#primaryValue").textContent = Math.abs(value) >= 100 ? value.toFixed(1) : value.toPrecision(4);
   CNTBET.qs("#primaryUnit").textContent = unit;
   const confidence = metrics.resistivity_prediction_confidence
@@ -169,7 +171,7 @@ CNTBET.setMetrics = function (metrics) {
   const entries = Object.entries(metrics || {}).filter(([, v]) => v !== undefined && v !== null && v !== "");
   CNTBET.setPrimaryResult(metrics || {});
   CNTBET.qs("#metricGrid").innerHTML = entries
-    .map(([k, v]) => '<div class="metric"><span>' + CNTBET.labelForMetric(k) + '</span><strong>' + CNTBET.displayValue(v, k) + '</strong></div>')
+    .map(([k, v]) => '<div class="metric"><span>' + CNTBET.escapeHtml(CNTBET.labelForMetric(k)) + '</span><strong>' + CNTBET.escapeHtml(CNTBET.displayValue(v, k)) + '</strong></div>')
     .join("");
 };
 

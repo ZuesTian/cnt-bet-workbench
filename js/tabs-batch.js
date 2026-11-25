@@ -54,7 +54,7 @@ CNTBET.runBatchPredict = async function () {
     CNTBET.setStatus("批量预测完成", data.summary.prediction_rows + " 成功 / " + data.summary.error_rows + " 失败");
     CNTBET.setMetrics(data.summary);
     CNTBET.setResult(data, "报告已生成并开始下载", data.rows);
-    if (data.download.content_base64) CNTBET.downloadBase64(data.download);
+    if (data.download?.content_base64) CNTBET.downloadBase64(data.download);
     if (data.errors?.length) CNTBET.setMessage("error", "有 " + data.errors.length + " 行需要检查。");
   } catch (err) {
     CNTBET.setStatus("批量预测失败");

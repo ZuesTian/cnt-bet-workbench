@@ -30,38 +30,53 @@ CNTBET.syncResistivityFamilyAvailability = function () {
   }
 };
 
+function bindAction(selector, action) {
+  const button = CNTBET.qs(selector);
+  button.addEventListener("click", async () => {
+    if (button.disabled) return;
+    button.disabled = true;
+    try { await action(); } finally { button.disabled = false; }
+  });
+}
+
 (async function init() {
+  CNTBET.qs("#clearBatchFile").addEventListener("click", () => { CNTBET.qs("#batchFile").value = ""; });
+  CNTBET.wireTabs();
+  CNTBET.renderFields("#predictFields", "mwcnt");
+  CNTBET.renderFields("#resistivityFields", "resistivity");
+  CNTBET.renderTemRows([]);
+  const edited = new Set();
+  for (const selector of ["#predictFields", "#resistivityFields", "#temTable"]) {
+    CNTBET.qs(selector).addEventListener("input", () => edited.add(selector), {once: true});
+  }
+  CNTBET.qs("#addTemRow").addEventListener("click", () => { edited.add("#temTable"); CNTBET.appendTemRow(); });
+  bindAction("#quickRun", CNTBET.runQuick);
+  bindAction("#predictRun", CNTBET.runPredict);
+  bindAction("#explainRun", CNTBET.runExplain);
+  bindAction("#whatIfRun", CNTBET.runWhatIf);
+  bindAction("#resistivityRun", CNTBET.runResistivity);
+  CNTBET.qs("#batchClipboard").addEventListener("click", CNTBET.readBatchClipboard);
+  bindAction("#batchPreviewRun", CNTBET.runImportPreview);
+  bindAction("#batchPredictRun", CNTBET.runBatchPredict);
+  bindAction("#inverseRun", CNTBET.runInverse);
+  CNTBET.qs("#predictFamily").addEventListener("change", (event) => CNTBET.renderFields("#predictFields", event.target.value));
+  CNTBET.qs("#inverseFamily").addEventListener("change", (event) => {
+    CNTBET.qs("#targetBet").value = event.target.value === "swcnt" ? 800 : 220;
+  });
   try {
     CNTBET.state.config = await CNTBET.api("/api/config");
+    CNTBET.qs(".service-state")?.classList.add("online");
+    CNTBET.qs("#serviceText").textContent = "API 在线";
+    CNTBET.qs("#version").textContent = "v" + CNTBET.state.config.version;
+    CNTBET.renderModelStatus();
+    CNTBET.syncResistivityFamilyAvailability();
+    if (!edited.has("#temTable")) CNTBET.renderTemRows(CNTBET.state.config.default_quick_rows);
+    if (!edited.has("#predictFields")) CNTBET.renderFields("#predictFields", CNTBET.qs("#predictFamily").value);
+    if (!edited.has("#resistivityFields")) CNTBET.renderFields("#resistivityFields", "resistivity");
   } catch (err) {
     CNTBET.setStatus("服务不可用");
     CNTBET.setMessage("error", err.message);
     CNTBET.qs(".service-state")?.classList.add("offline");
     CNTBET.qs("#serviceText").textContent = "API 离线";
-    return;
   }
-  CNTBET.qs(".service-state")?.classList.add("online");
-  CNTBET.qs("#serviceText").textContent = "API 在线";
-  CNTBET.qs("#version").textContent = "v" + CNTBET.state.config.version;
-  CNTBET.renderModelStatus();
-  CNTBET.syncResistivityFamilyAvailability();
-  CNTBET.renderTemRows(CNTBET.state.config.default_quick_rows);
-  CNTBET.renderFields("#predictFields", "mwcnt");
-  CNTBET.renderFields("#resistivityFields", "resistivity");
-  CNTBET.wireTabs();
-
-  CNTBET.qs("#addTemRow").addEventListener("click", () => CNTBET.appendTemRow());
-  CNTBET.qs("#quickRun").addEventListener("click", CNTBET.runQuick);
-  CNTBET.qs("#predictRun").addEventListener("click", CNTBET.runPredict);
-  CNTBET.qs("#explainRun").addEventListener("click", CNTBET.runExplain);
-  CNTBET.qs("#whatIfRun").addEventListener("click", CNTBET.runWhatIf);
-  CNTBET.qs("#resistivityRun").addEventListener("click", CNTBET.runResistivity);
-  CNTBET.qs("#batchClipboard").addEventListener("click", CNTBET.readBatchClipboard);
-  CNTBET.qs("#batchPreviewRun").addEventListener("click", CNTBET.runImportPreview);
-  CNTBET.qs("#batchPredictRun").addEventListener("click", CNTBET.runBatchPredict);
-  CNTBET.qs("#inverseRun").addEventListener("click", CNTBET.runInverse);
-  CNTBET.qs("#predictFamily").addEventListener("change", (event) => CNTBET.renderFields("#predictFields", event.target.value));
-  CNTBET.qs("#inverseFamily").addEventListener("change", (event) => {
-    CNTBET.qs("#targetBet").value = event.target.value === "swcnt" ? 800 : 220;
-  });
 })();

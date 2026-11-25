@@ -6,10 +6,11 @@
     <meta name="theme-color" content="#f3f5f0" />
     <meta name="color-scheme" content="light dark" />
     <meta name="description" content="CNT BET、粉末电阻率、批量预测与反向设计工作台" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a756d'/%3E%3Ccircle cx='16' cy='16' r='8.5' fill='none' stroke='%23d1eb83' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23d1eb83'/%3E%3C/svg%3E">
     <title>CNT-BET 预测工作台</title>
-    <script src="theme.js?v=20260813"></script>
+    <script src="theme.js?v=20261125"></script>
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="theme.css?v=20260813" />
+    <link rel="stylesheet" href="theme.css?v=20261125" />
   </head>
   <body>
     <main class="workbench-shell">
@@ -23,7 +24,7 @@
         </header>
 
         <div class="sidebar-tools">
-          <a href="https://zuestian.github.io/Cnanotools/">← CNT LAB</a>
+          <a href="https://zuestian.github.io/Cnanotools/">返回 CNT LAB</a>
           <button type="button" data-theme-toggle>
             <span data-theme-icon aria-hidden="true">☾</span><span data-theme-label>深色</span>
           </button>
@@ -121,7 +122,7 @@
                 <label>任务<select id="batchTask"><option value="bet">BET 预测</option><option value="resistivity">粉末电阻率</option><option value="joint">联合预测</option></select></label>
                 <label>碳管体系<select id="batchFamily"><option value="mwcnt">MWCNT</option><option value="swcnt">SWCNT</option></select></label>
               </div>
-              <label class="file-field">CSV / Excel<input id="batchFile" type="file" accept=".csv,.xlsx,.xlsm" /></label>
+              <label class="file-field">CSV / Excel<input id="batchFile" type="file" accept=".csv,.xlsx,.xlsm" /></label><button type="button" id="clearBatchFile">清除所选文件</button>
               <label>或粘贴 Excel / CSV<textarea id="batchText" rows="6" spellcheck="false" placeholder="从 Excel 复制含表头的单元格区域后按 Ctrl+V；也支持 CSV、分号或竖线分隔文本"></textarea></label>
               <div class="actions">
                 <button id="batchClipboard" type="button" class="quiet-action">读取剪贴板</button>
@@ -145,11 +146,11 @@
           <section class="result-card" aria-live="polite">
             <header class="card-head dark">
               <span>预测结果</span>
-              <small id="resultState">READY</small>
+              <small id="resultState">PENDING</small>
             </header>
             <div id="primaryResult" class="primary-result">
               <span id="primaryLabel">等待计算</span>
-              <strong id="primaryValue">—</strong>
+              <strong id="primaryValue" class="empty-result">待计算</strong>
               <small id="primaryUnit"></small>
               <p id="primaryMeta">输入参数后开始预测</p>
             </div>
@@ -172,7 +173,7 @@
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/fields.js"></script>
-    <script src="js/tabular-paste.js?v=20260814-paste"></script>
+    <script src="js/tabular-paste.js?v=20261125"></script>
     <script src="js/tabs-quick.js"></script>
     <script src="js/tabs-predict.js"></script>
     <script src="js/tabs-resistivity.js"></script>

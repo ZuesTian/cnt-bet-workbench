@@ -7,7 +7,7 @@
   --panel-soft: #edf2ee;
   --lime: #cdea72;
   --cyan: #68d3c4;
-  --muted: #637770;
+  --muted: #55685f;
   --line: #d8e1dc;
   --danger: #f17b64;
   --shadow: 0 24px 70px rgba(17, 50, 44, .11);
@@ -35,7 +35,7 @@ body { background: radial-gradient(circle at 88% 2%, color-mix(in srgb, var(--cy
 .sidebar::after { position: absolute; right: -150px; bottom: 5%; width: 280px; height: 280px; border: 1px solid rgba(205,234,114,.11); border-radius: 50%; box-shadow: 0 0 0 46px rgba(205,234,114,.025), 0 0 0 96px rgba(104,211,196,.018); content: ""; pointer-events: none; }
 .brand-block, .sidebar-tools, .mode-tabs, .model-details, .sidebar-foot { position: relative; z-index: 1; }
 .sidebar-tools { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 18px; }
-.sidebar-tools a, .sidebar-tools button { display: inline-flex; min-height: 36px; align-items: center; gap: 7px; padding: 0 10px; border: 1px solid rgba(255,255,255,.13); border-radius: 9px; color: #9fc0b9; background: rgba(255,255,255,.045); font-size: 9px; font-weight: 800; }
+.sidebar-tools a, .sidebar-tools button { display: inline-flex; min-height: 36px; align-items: center; gap: 7px; padding: 0 10px; border: 1px solid rgba(255,255,255,.13); border-radius: 9px; color: #9fc0b9; background: rgba(255,255,255,.045); font-size: 12px; font-weight: 800; }
 .sidebar-tools button { cursor: pointer; }
 .sidebar-tools button:hover, .sidebar-tools a:hover { color: var(--lime); border-color: rgba(205,234,114,.3); }
 .sidebar-tools [data-theme-icon] { font-size: 13px; }
@@ -66,7 +66,15 @@ input:focus, select:focus, textarea:focus { border-color: var(--cyan); box-shado
 @media (max-width: 760px) {
   .sidebar::after { display: none; }
   .sidebar-tools { position: absolute; top: 14px; right: 16px; margin: 0; }
-  .sidebar-tools a { display: none; }
-  .sidebar-tools button { width: 38px; justify-content: center; padding: 0; }
-  .sidebar-tools [data-theme-label] { display: none; }
+  .sidebar-tools a { display:inline-flex;align-items:center;min-height:44px }
+  .sidebar-tools button { min-width:44px;justify-content:center;padding:0 8px; }
+  .sidebar-tools { position:static;flex-wrap:wrap }
 }
+
+@media(max-width:340px){.sidebar-tools [data-theme-label]{display:none}}
+#primaryValue:empty{font-size:1rem}
+
+[data-theme-toggle],a[href="https://zuestian.github.io/Cnanotools/"]{min-height:44px;min-width:44px}
+@media(min-width:341px){[data-theme-toggle] [data-theme-label]{display:inline}}
+
+#primaryValue.empty-result{font-size:1.2rem;font-weight:500;line-height:1.5;letter-spacing:normal}

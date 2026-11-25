@@ -58,7 +58,7 @@ CNTBET.renderFields = function (containerId, family) {
   });
   CNTBET.qs(containerId).innerHTML = Object.entries(groups)
     .map(([group, fields]) => '<fieldset class="field-group"><legend>' + CNTBET.escapeHtml(group) +
-      '</legend><div class="field-stack">' +
+      '</legend><div class="field-grid">' +
       fields.map(([key, label, type]) => {
         const value = defaults[key] ?? "";
         const step = type === "number" ? ' step="0.001"' : "";

@@ -13,7 +13,7 @@ CNTBET.api = async function (path, payload) {
   const options = payload
     ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }
     : {};
-  const response = await fetch(`${window.CNTBET_API_BASE}${path}`, options);
+  const response = await fetch(`${window.CNTBET_API_BASE}${path}`, { ...options, signal: AbortSignal.timeout(60000) });
   const raw = await response.text();
   let data;
   try {
